@@ -13,9 +13,12 @@ const checkBoardConfig = reactive({
     height: 800,
     bgColor: '#dab490'
 })
+const circles = [];
 let canvasEle = ref<HTMLCanvasElement | null>(null);
 let canvasCtx: CanvasRenderingContext2D | null = null;
-const circles = []
+let isBlack = true;
+let endGame = false;
+
 onMounted(() => {
     init()
 })
@@ -58,7 +61,167 @@ const drawCheckerBoardGrid = (ctx: CanvasRenderingContext2D) => {
 }
 //点击事件监听
 const handleClick = (e: MouseEvent) => {
+    const { offsetX, offsetY } = e;
+    if (judgeCircleBorder(offsetX, offsetY)) return;
+    if (endGame) {
+        return;
+    }
+    //格子所在的位置
+    let i = Math.floor((offsetX + 25) / 50);
+    let j = Math.floor((offsetY + 25) / 50);
+    //判断棋子是否重复
+    if (hasCircle(i, j)) {
+        return;
+    }
+    drawCircle(i, j);
+    endGame = checkCircleLine(i, j);
+    if (endGame) {
+        return;
+    }
+    isBlack = !isBlack;
 
+}
+//判断棋子边界条件
+const judgeCircleBorder = (x: number, y: number) => {
+    return x < 25 || y < 25 || x > 775 || y > 775
+}
+//绘制棋子
+const drawCircle = (i: number, j: number) => {
+    const x = i * 50;
+    const y = j * 50;
+    canvasCtx.beginPath();
+    canvasCtx.arc(x, y, 20, 0, Math.PI * 2);
+    //把对应的棋子存到我们的二维数组中
+    circles[i][j] = isBlack ? 'black' : 'white';
+
+    //根据当前是哪种棋子，判断棋子的颜色
+    let tx = isBlack ? x - 10 : x + 10;
+    let ty = isBlack ? y - 10 : y + 10;
+    let g = canvasCtx.createRadialGradient(tx, ty, 0, tx, ty, 30);
+    g.addColorStop(0, isBlack ? "#ccc" : '#666');
+    g.addColorStop(1, isBlack ? '#000' : '#fff');
+    canvasCtx.fillStyle = g;
+    //设置阴影美化棋子
+    canvasCtx.shadowBlur = 4;
+    canvasCtx.shadowColor = '#333';
+    canvasCtx.shadowOffsetX = 4;
+    canvasCtx.shadowOffsetY = 4;
+    canvasCtx.fill();
+    canvasCtx.closePath();
+}
+//判断当前位置是否存在棋子
+const hasCircle = (i: number, j: number) => {
+    return circles[i][j]
+}
+//检测棋子的连线情况
+const checkCircleLine = (i: number, j: number) => {
+    return checkVertical(i, j) || checkHorizontal(i, j) || checkNW2SE(i, j) || checkNE2SW(i, j);
+}
+//纵向查找是否有五个连续的相同的棋子
+const checkVertical = (row: number, col: number) => {
+    //定义一个变量定义向上的次数
+    let up = 0;
+    //定义一个变量定义向下的次数
+    let down = 0;
+    let times = 0;
+    //当前总共有几个连在一起
+    let count = 1;//初始值为1 本身算一个
+    let target = isBlack ? 'black' : 'white';
+    //为了避免死循环，给一个循环上限
+    while (times < 10000) {
+        times++;
+        //以row和col为起点在二维数组上向上和向下查找
+        //向上查找
+        up++;
+        if (circles[row][col - up] && circles[row][col - up] === target) {
+            count++;
+        }
+
+        //向下查找
+        down++;
+        if (circles[row][col + down] && circles[row][col + down] === target) {
+            count++
+        }
+        //如果棋子大于指定次数 或者棋子不是连续的
+        if (count >= 5 || (circles[row][col - up]) !== target && circles[row][col + down] !== target) break;
+    }
+    return count >= 5;
+}
+//横向查找是否有五个连续的相同的棋子
+const checkHorizontal = (row: number, col: number) => {
+    //定义一个变量定义向左的次数
+    let left = 0;
+    //定义一个变量定义向右的次数
+    let right = 0;
+    let times = 0;
+    //当前总共有几个连在一起
+    let count = 1;//初始值为1 本身算一个
+    let target = isBlack ? 'black' : 'white';
+    //为了避免死循环，给一个循环上限
+    while (times < 10000) {
+        times++;
+
+
+        //以row和col为起点在二维数组上向左和向右查找
+        //向左查找
+        left++;
+        if (circles[row - left][col] && circles[row - left][col] === target) {
+            count++;
+        }
+
+        //向右查找
+        right++;
+        if (circles[row + right][col] && circles[row + right][col] === target) {
+            count++
+        }
+        //如果棋子大于指定次数 或者棋子不是连续的
+        if (count >= 5 || (circles[row - left][col]) !== target && circles[row + right][col] !== target) break;
+    }
+    return count >= 5;
+}
+//从左上到右下连续
+const checkNW2SE = (row: number, col: number) => {
+    let times = 0;
+    let lt = 0;
+    let rb = 0;
+    let count = 1;
+    let target = isBlack ? 'black' : 'white';
+    while (times < 10000) {
+        times++;
+        lt++;
+        if (circles[row - lt][col - lt] && circles[row - lt][col - lt] === target) {
+            count++;
+        }
+        rb++
+        if (circles[row + rb][col + rb] && circles[row + rb][col + rb] === target) {
+            count++;
+        }
+
+        if (count >= 5 || (circles[row - lt][col - lt] !== target && circles[row + rb][col + rb] !== target)) break;
+    }
+    return count >= 5;
+}
+//从右下到左上
+const checkNE2SW = (row: number, col: number) => {
+    let times = 0;
+    let rt = 0;
+    let lb = 0;
+    let count = 1;
+    let target = isBlack ? 'black' : 'white';
+    while (times < 10000) {
+        times++;
+        rt++;
+        if (circles[row + rt][col - rt] && circles[row + rt][col - rt] === target) {
+            count++;
+        }
+        lb++
+        if (circles[row - lb][col + lb] && circles[row - lb][col + lb] === target) {
+            count++;
+        }
+
+        if (count >= 5 || (circles[row + rt][col - rt] !== target && circles[row - lb][col + lb] !== target)) break;
+    }
+    return count >= 5;
 }
 
 </script>
