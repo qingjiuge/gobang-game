@@ -6,7 +6,9 @@
     </div>
 </template>
 <script lang="ts" setup>
+
 import { ref, onMounted, reactive } from 'vue';
+
 const checkBoard = ref<HTMLDivElement | null>(null);
 const checkBoardConfig = reactive({
     width: 800,
@@ -19,16 +21,19 @@ let canvasCtx: CanvasRenderingContext2D | null = null;
 let isBlack = true;
 let endGame = false;
 
-onMounted(() => {
-    init()
-})
+/**
+ * 初始化
+ */
 const init = () => {
     // 初始化棋盘
     canvasEle.value = createCanvas();
     drawCheckBoard();
 
 }
-//创建canvas 画布
+
+/**
+ * 创建canvas 画布
+ */
 const createCanvas = () => {
     const canvas = document.createElement('canvas');
     canvas.width = checkBoard.value.offsetWidth;
@@ -37,12 +42,19 @@ const createCanvas = () => {
     canvas.addEventListener('click', (e) => { handleClick(e) })
     return canvas;
 }
-//绘制棋盘
+
+/**
+ * 绘制棋盘
+ */
 const drawCheckBoard = () => {
     canvasCtx = canvasEle.value.getContext('2d');
     drawCheckerBoardGrid(canvasCtx);
 }
-//绘制棋盘格子
+
+/**
+ * 绘制棋盘格子
+ * @param ctx
+ */
 const drawCheckerBoardGrid = (ctx: CanvasRenderingContext2D) => {
     //画棋盘
     for (let i = 1; i < 16; i++) {
@@ -59,7 +71,11 @@ const drawCheckerBoardGrid = (ctx: CanvasRenderingContext2D) => {
         ctx.stroke();
     }
 }
-//点击事件监听
+
+/**
+ * 点击事件监听
+ * @param e
+ */
 const handleClick = (e: MouseEvent) => {
     const { offsetX, offsetY } = e;
     if (judgeCircleBorder(offsetX, offsetY)) return;
@@ -81,11 +97,21 @@ const handleClick = (e: MouseEvent) => {
     isBlack = !isBlack;
 
 }
-//判断棋子边界条件
+
+/**
+ * 判断棋子边界条件
+ * @param x
+ * @param y
+ */
 const judgeCircleBorder = (x: number, y: number) => {
     return x < 25 || y < 25 || x > 775 || y > 775
 }
-//绘制棋子
+
+/**
+ * 绘制棋子
+ * @param i
+ * @param j
+ */
 const drawCircle = (i: number, j: number) => {
     const x = i * 50;
     const y = j * 50;
@@ -109,15 +135,30 @@ const drawCircle = (i: number, j: number) => {
     canvasCtx.fill();
     canvasCtx.closePath();
 }
-//判断当前位置是否存在棋子
+
+/**
+ * 判断当前位置是否存在棋子
+ * @param i
+ * @param j
+ */
 const hasCircle = (i: number, j: number) => {
     return circles[i][j]
 }
-//检测棋子的连线情况
+
+/**
+ * 检测棋子的连线情况
+ * @param i
+ * @param j
+ */
 const checkCircleLine = (i: number, j: number) => {
     return checkVertical(i, j) || checkHorizontal(i, j) || checkNW2SE(i, j) || checkNE2SW(i, j);
 }
-//纵向查找是否有五个连续的相同的棋子
+
+/**
+ * 纵向查找是否有五个连续的相同的棋子
+ * @param row
+ * @param col
+ */
 const checkVertical = (row: number, col: number) => {
     //定义一个变量定义向上的次数
     let up = 0;
@@ -147,7 +188,12 @@ const checkVertical = (row: number, col: number) => {
     }
     return count >= 5;
 }
-//横向查找是否有五个连续的相同的棋子
+
+/**
+ * 横向查找是否有五个连续的相同的棋子
+ * @param row
+ * @param col
+ */
 const checkHorizontal = (row: number, col: number) => {
     //定义一个变量定义向左的次数
     let left = 0;
@@ -179,7 +225,12 @@ const checkHorizontal = (row: number, col: number) => {
     }
     return count >= 5;
 }
-//从左上到右下连续
+
+/**
+ * 从左上到右下连续
+ * @param row
+ * @param col
+ */
 const checkNW2SE = (row: number, col: number) => {
     let times = 0;
     let lt = 0;
@@ -201,7 +252,12 @@ const checkNW2SE = (row: number, col: number) => {
     }
     return count >= 5;
 }
-//从右下到左上
+
+/**
+ * 从右下到左上
+ * @param row
+ * @param col
+ */
 const checkNE2SW = (row: number, col: number) => {
     let times = 0;
     let rt = 0;
@@ -224,7 +280,11 @@ const checkNE2SW = (row: number, col: number) => {
     return count >= 5;
 }
 
+onMounted(() => {
+    init()
+})
 </script>
+
 <style lang="scss" scoped>
 .checker-board {
     display: block;
