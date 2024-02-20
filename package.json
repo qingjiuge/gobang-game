@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite --mode  development",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "deploy": "pnpm run build && gh-pages -d dist"
   },
   "dependencies": {
+    "gh-pages": "^6.1.1",
     "pinia": "^2.1.7",
     "sass": "^1.70.0",
     "vue": "^3.3.11",
