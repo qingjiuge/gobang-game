@@ -1,11 +1,16 @@
 <template>
-    <div ref="checkBoard"
-        :style="{ width: checkBoardConfig.width + 'px', height: checkBoardConfig.height + 'px', backgroundColor: checkBoardConfig.bgColor }"
-        class="checker-board">
+    <div class="game-layout">
+        <GameNav @back="backMenu" />
+        <div ref="checkBoard" class="checker-board" :style="{
+            width: `${checkBoardConfig.width}px`,
+            height: `${checkBoardConfig.height}px`,
+            backgroundColor: checkBoardConfig.bgColor
+        }"></div>
     </div>
 </template>
 
 <script lang="ts" setup>
+import GameNav from '@/Components/GameNav.vue';
 
 const checkBoard = ref<HTMLDivElement | null>(null);
 const checkBoardConfig = reactive({
@@ -26,7 +31,6 @@ const init = () => {
     // 初始化棋盘
     canvasEle.value = createCanvas();
     drawCheckBoard();
-
 }
 
 /**
@@ -278,14 +282,25 @@ const checkNE2SW = (row: number, col: number) => {
     return count >= 5;
 }
 
+const emit = defineEmits(["backMenu"])
+
+const backMenu = () => emit("backMenu")
+
 onMounted(() => {
     init()
 })
 </script>
 
 <style lang="scss" scoped>
-.checker-board {
-    display: block;
-    margin: 40px auto;
+.game-layout {
+    width: 100%;
+    height: 100%;
+
+    
+
+    .checker-board {
+        display: block;
+        margin: 25px  auto;
+    }
 }
 </style>

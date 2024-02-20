@@ -1,9 +1,7 @@
 <template>
     <div class="game-menu">
-        <div class="container">
-            <div class="game-menu-item" v-for=" (item, i) in menuList" @click="menuSelectItem(item)" :key="item.id">
-                <span>{{ item.label }}</span>
-            </div>
+        <div class="game-menu-item" v-for=" (item, i) in menuList" :key="item.id" @click="menuSelectItem(item)">
+            {{ item.label }}
         </div>
     </div>
 </template>
@@ -40,12 +38,11 @@ const menuSelectItem = (item) => {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 
-    .container {
-        width: 80%;
-    }
 
     .game-menu-item {
+        width: 80%;
         padding: 15px 10px;
         font-size: 32px;
         text-align: center;

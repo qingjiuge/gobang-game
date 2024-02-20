@@ -1,34 +1,37 @@
 import { uuid } from "@/Until/tools";
 import { Piece } from "./piece";
+
 export enum PlayerStatus {
-    //等待中
-    waiting = 0,
-    //准备好
-    ready = 1,
-    //完成
-    over = 2,
+    // 等待中
+    waiting,
+    // 准备好
+    ready,
+    // 完成
+    over,
 }
+
 export enum PieceMode {
-    //电脑
-    computer = 0,
-    //玩家
-    player = 1
+    // 电脑
+    computer,
+    // 玩家
+    player
 }
-//玩家类
+
+// 玩家类
 export class Player {
-    //玩家的用户id
+    // 玩家的用户id
     uid: string | null;
-    //玩家的id
+    // 玩家的id
     id: string | null;
-    //玩家的棋子类型
+    // 玩家的棋子类型
     pieceType: Piece;
-    //玩家的状态
+    // 玩家的状态
     status: PlayerStatus;
-    //玩家的昵称
+    // 玩家的昵称
     nickName: string;
-    //玩家的胜负情况
+    // 玩家的胜负情况
     result: number[] = [];
-    //玩家模式
+    // 玩家模式
     mode: PieceMode;
     constructor() {
         this.id = uuid();
@@ -37,23 +40,23 @@ export class Player {
         this.result = [];
         this.mode = 0;
     }
-    //更新玩家状态
+    // 更新玩家状态
     updateStatus(status: number) {
         this.status = status;
     }
-    //更新玩家棋子类型
+    // 更新玩家棋子类型
     updatePieceType(piece: Piece) {
         this.pieceType = piece;
     }
-    //更新玩家胜负情况
+    // 更新玩家胜负情况
     updateResult(result: number) {
         this.result.push(result);
     }
-    //更新模式
+    // 更新模式
     updateMode(mode: PieceMode) {
         this.mode = mode;
     }
-    //更新用户id
+    // 更新用户id
     updateUid(uid: string | null) {
         this.uid = uid ? uid : uuid();
     }

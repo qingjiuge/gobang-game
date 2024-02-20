@@ -1,8 +1,9 @@
 <template>
     <div class="home">
         <div class="container">
-            <CheckerBoard v-if="menuItem === 1"></CheckerBoard>
-            <GameMenu v-if="menuItem === 0" @menu-select="getMenuItem"></GameMenu>
+            <GameMenu v-if="menuItem === 0" @menu-select="getMenuItem" />
+            <CheckerBoard v-else-if="menuItem === 1" @back-menu="menuItem = 0" />
+            <DeveloperList v-else-if="menuItem === 5" @back-menu="menuItem = 0" />
         </div>
     </div>
 </template>
@@ -10,20 +11,24 @@
 <script lang="ts" setup>
 import CheckerBoard from '@/Components/CheckerBoard.vue';
 import GameMenu from '@/Components/GameMenu.vue';
+import DeveloperList from '@/Components/DeveloperList.vue';
+
 import { IMenuItem } from '@/Types';
 import { PieceType, Piece } from '@/Types/piece';
 import { Player, PieceMode } from '@/Types/player';
-import { ref } from 'vue';
+
 const menuItem = ref(0);
+
 const gameConfig = {
-    //玩家1信息
+    // 玩家1信息
     player1: {},
-    //玩家2信息
+    // 玩家2信息
     player2: {},
-    //游戏的状态
+    // 游戏的状态
     status: 0,
 }
-//当前游戏玩家信息
+
+// 当前游戏玩家信息
 const currentPlayer = ref<Player>();
 const currentOrder = ref<number>(0);
 const getMenuItem = (item: IMenuItem) => {
@@ -33,7 +38,8 @@ const getMenuItem = (item: IMenuItem) => {
     menuItem.value = item.id;
     console.log(gameConfig)
 }
-//准备游戏工作
+
+// 准备游戏工作
 const readyGame = () => {
     const player1 = createPlayer(PieceMode.player, PieceType.black);
     const player2 = createPlayer(PieceMode.computer, PieceType.white);
@@ -48,7 +54,8 @@ const readyGame = () => {
     }
     gameConfig.status = 1
 }
-//创建玩家
+
+// 创建玩家
 const createPlayer = (mode: PieceMode, type: PieceType, id: string = null) => {
     const player = new Player();
     player.updateMode(mode);
@@ -57,12 +64,14 @@ const createPlayer = (mode: PieceMode, type: PieceType, id: string = null) => {
     player.updatePieceType(createPiece(type))
     return player;
 }
-//创建棋子
+
+// 创建棋子
 const createPiece = (type: PieceType) => {
     const piece = new Piece(type);
     return piece;
 }
-//更新当前游戏玩家
+
+// 更新当前游戏玩家
 const updateCurrentPlayer = (player: Player) => {
     currentPlayer.value = player;
 
@@ -78,7 +87,6 @@ const updateCurrentPlayer = (player: Player) => {
     .container {
         justify-content: center;
         flex: 1;
-        padding: 20px;
     }
 }
 </style>
