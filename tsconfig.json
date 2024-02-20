@@ -12,17 +12,22 @@
       "@/*": ["src/*"]
     },
     "resolveJsonModule": true,
+    "types": ["vite/client"],
     "allowJs": true,
     "strict": false,
     "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames":true,
-    "allowSyntheticDefaultImports":true
+    "skipLibCheck": true
   },
   "references": [{ "path": "./tsconfig.node.json" }],
   "include": [
-    "src/**/*", "src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "test/__tests__"
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/**/*.lrc",
+    "src/**/*.mp3",
+    "auto-imports.d.ts"
   ]
 }

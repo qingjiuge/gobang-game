@@ -6,12 +6,14 @@
         </div>
     </div>
 </template>
+
 <script lang="ts" setup>
-import CheckerBoard from '@/components/Game/CheckerBoard.vue';
-import GameMenu, { IMenuItem } from '@/components/Game/Menu.vue';
+import CheckerBoard from '@/components/CheckerBoard.vue';
+import GameMenu from '@/components/GameMenu.vue';
+import { IMenuItem } from '@/Types';
+import { PieceType, Piece } from '@/Types/piece';
+import { Player, PieceMode } from '@/Types/player';
 import { ref } from 'vue';
-import { PieceMode, Player } from '@/components/Player/player'
-import { Piece, PieceType } from '@/components/Piece/Piece';
 const menuItem = ref(0);
 const gameConfig = {
     //玩家1信息
@@ -66,6 +68,7 @@ const updateCurrentPlayer = (player: Player) => {
 
 }
 </script>
+
 <style lang="scss" scoped>
 .home {
     width: 100%;

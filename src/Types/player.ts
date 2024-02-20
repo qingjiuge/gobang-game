@@ -1,5 +1,5 @@
 import { uuid } from "@/until/tools";
-import { Piece } from "../Piece/Piece";
+import { Piece } from "./piece";
 export enum PlayerStatus {
     //等待中
     waiting = 0,
