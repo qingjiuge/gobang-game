@@ -2,11 +2,10 @@
     <div ref="checkBoard"
         :style="{ width: checkBoardConfig.width + 'px', height: checkBoardConfig.height + 'px', backgroundColor: checkBoardConfig.bgColor }"
         class="checker-board">
-
     </div>
 </template>
-<script lang="ts" setup>
 
+<script lang="ts" setup>
 import { ref, onMounted, reactive } from 'vue';
 
 const checkBoard = ref<HTMLDivElement | null>(null);
