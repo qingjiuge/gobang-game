@@ -1,0 +1,35 @@
+//全局scss样式
+
+//bem规则
+$namespace: "st" !default;
+$block-sel: "-" !default;
+$elem-sel: "_" !default;
+$mod-sel: "--" !default;
+@mixin b($block) {
+  $B: #{$namespace}#{$block-sel}#{$block} !default;
+  .#{$B} {
+    @content;
+  }
+}
+@mixin e($el) {
+  $selector: &;
+  $E: #{$selector}#{$elem-sel}#{$el};
+  @at-root {
+    #{$E} {
+      @content;
+    }
+  }
+}
+@mixin m($m) {
+  $selector: &;
+  $M: #{$selector}#{$mod-sel}#{$m};
+  @at-root {
+    #{$M} {
+      @content;
+    }
+  }
+}
+@mixin bfc {
+  height: 100%;
+  overflow: hidden;
+}
