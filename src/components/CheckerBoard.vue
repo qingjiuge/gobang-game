@@ -6,7 +6,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, reactive } from 'vue';
 
 const checkBoard = ref<HTMLDivElement | null>(null);
 const checkBoardConfig = reactive({
