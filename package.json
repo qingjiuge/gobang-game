@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --mode  development",
     "build": "vue-tsc && vite build",
-    "deploy": "pnpm run build && gh-pages -d dist"
+    "predeploy": "pnpm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "gh-pages": "^6.1.1",
