@@ -1,8 +1,8 @@
-import {defineConfig} from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import {fileURLToPath, URL} from 'node:url'
+import { fileURLToPath, URL } from 'node:url'
 // https://vitejs.dev/config/
-export default ({mode}: any) => {
+export default ({ mode }: any) => {
     return defineConfig({
         plugins: [vue()],
         resolve: {

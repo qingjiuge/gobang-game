@@ -11,7 +11,7 @@ import CheckerBoard from '@/components/Game/CheckerBoard.vue';
 import GameMenu, { IMenuItem } from '@/components/Game/Menu.vue';
 import { ref } from 'vue';
 const menuItem = ref(0)
-const getMenuItem = (item:IMenuItem) => {
+const getMenuItem = (item: IMenuItem) => {
     menuItem.value = item.id
 }
 </script>
