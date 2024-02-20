@@ -1,4 +1,4 @@
-import { uuid } from "@/until/tools";
+import { uuid } from "@/Until/tools";
 import { Piece } from "./piece";
 export enum PlayerStatus {
     //等待中

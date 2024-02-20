@@ -1,6 +1,6 @@
 
+import HomeVue from '@/Pages/Home.vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import HomeVue from '../pages/Home.vue';
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',

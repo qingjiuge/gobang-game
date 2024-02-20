@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts" setup>
-import CheckerBoard from '@/components/CheckerBoard.vue';
-import GameMenu from '@/components/GameMenu.vue';
+import CheckerBoard from '@/Components/CheckerBoard.vue';
+import GameMenu from '@/Components/GameMenu.vue';
 import { IMenuItem } from '@/Types';
 import { PieceType, Piece } from '@/Types/piece';
 import { Player, PieceMode } from '@/Types/player';
