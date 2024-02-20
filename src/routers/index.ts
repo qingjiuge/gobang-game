@@ -8,7 +8,7 @@ const routes:Array<RouteRecordRaw>=[
     }
 ]
 const router=createRouter({
-    history:createWebHistory(),
+    history:createWebHistory('/gobang-game/'),
     routes:routes //在后面添加
 })
 export default router
