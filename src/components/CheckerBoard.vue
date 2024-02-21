@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import { Player, PlayerStatus } from '@/Types/player';
+import GameNav from './GameNav.vue';
 const props = defineProps({
     player: Player,
 })
