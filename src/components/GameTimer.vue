@@ -24,11 +24,15 @@ const emit = defineEmits(["backTime"]);
 const props = defineProps({
     setTime: {
         type: Number,
-        default: ()=>{
+        default: () => {
             return ONE_MINUTE * 1
         }
     }
 })
+/**
+ * 
+ * @param num 显示的数字
+ */
 const numToString = (num: number) => {
     const numStr = num.toString();
     if (numStr.length < 2) {

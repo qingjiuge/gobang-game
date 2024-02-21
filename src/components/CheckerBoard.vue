@@ -177,7 +177,7 @@ const drawCircle = (i: number, j: number) => {
     let tx = isBlack ? x - 10 : x + 10;
     let ty = isBlack ? y - 10 : y + 10;
     let g = canvasCtx.createRadialGradient(tx, ty, 0, tx, ty, 30);
-    g.addColorStop(0, isBlack ? "#ccc" : '#666');
+    g.addColorStop(0, '#ccc');
     g.addColorStop(1, isBlack ? '#000' : '#fff');
     canvasCtx.fillStyle = g;
     //设置阴影美化棋子
