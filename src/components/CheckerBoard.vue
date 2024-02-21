@@ -10,8 +10,10 @@
 </template>
 
 <script lang="ts" setup>
-import GameNav from '@/Components/GameNav.vue';
-
+import { Player, PlayerStatus } from '@/Types/player';
+const props = defineProps({
+    player: Player,
+})
 const checkBoard = ref<HTMLDivElement | null>(null);
 const checkBoardConfig = reactive({
     width: 800,
@@ -23,6 +25,7 @@ let canvasEle = ref<HTMLCanvasElement | null>(null);
 let canvasCtx: CanvasRenderingContext2D | null = null;
 let isBlack = true;
 let endGame = false;
+let currentPlayer: Player | null = null
 
 /**
  * 初始化
@@ -30,7 +33,16 @@ let endGame = false;
 const init = () => {
     // 初始化棋盘
     canvasEle.value = createCanvas();
+
+    //画棋盘
     drawCheckBoard();
+
+}
+//初始化配置项
+const initConfig = () => {
+    currentPlayer = props.player;
+    const { pieceType } = currentPlayer;
+    isBlack = Boolean(pieceType.type);
 }
 
 /**
@@ -79,6 +91,8 @@ const drawCheckerBoardGrid = (ctx: CanvasRenderingContext2D) => {
  * @param e
  */
 const handleClick = (e: MouseEvent) => {
+    //初始化配置项
+    initConfig();
     const { offsetX, offsetY } = e;
     if (judgeCircleBorder(offsetX, offsetY)) return;
     if (endGame) {
@@ -96,7 +110,12 @@ const handleClick = (e: MouseEvent) => {
     if (endGame) {
         return;
     }
-    isBlack = !isBlack;
+    // isBlack = !isBlack;
+    //将当前玩家的状态置为完成
+    currentPlayer.updateStatus(PlayerStatus.over);
+    //记录玩家的棋子位置
+
+    backPlayer(currentPlayer)
 
 }
 
@@ -282,9 +301,10 @@ const checkNE2SW = (row: number, col: number) => {
     return count >= 5;
 }
 
-const emit = defineEmits(["backMenu"])
+const emit = defineEmits(["backMenu", 'backPlayer'])
 
 const backMenu = () => emit("backMenu")
+const backPlayer = (player: Player) => emit('backPlayer', player)
 
 onMounted(() => {
     init()
@@ -296,11 +316,11 @@ onMounted(() => {
     width: 100%;
     height: 100%;
 
-    
+
 
     .checker-board {
         display: block;
-        margin: 25px  auto;
+        margin: 25px auto;
     }
 }
 </style>
