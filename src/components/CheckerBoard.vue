@@ -19,7 +19,10 @@ import GameOption from './GameOption.vue';
 import GameTimer from './GameTimer.vue';
 import { IMenuItem, ONE_MINUTE, Options } from '@/Types';
 const props = defineProps({
-    player: Player
+    player: Player,
+    gameStatus: {
+        type: Number
+    },
 })
 const checkBoard = ref<HTMLDivElement | null>(null);
 const checkBoardConfig = reactive({
@@ -111,6 +114,7 @@ const menuSelectItem = (item: IMenuItem) => {
  * @param e
  */
 const handleClick = (e: MouseEvent) => {
+    if (props.gameStatus === 2) return;
     //初始化配置项
     initConfig();
     if (currentPlayer().status !== PlayerStatus.ready) return;

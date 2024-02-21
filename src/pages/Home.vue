@@ -27,7 +27,7 @@ const gameConfig = {
     player1: {},
     // 玩家2信息
     player2: {},
-    // 游戏的状态
+    // 游戏的状态 0未开始 1进行中 2结束
     status: 0,
     // 计时器时间
     timer: 1000 * 60 * 3,
