@@ -8,3 +8,9 @@ export interface IMenuItem {
   // id: 菜单项的唯一标识
   id: number
 }
+export enum Options {
+  //取消
+  cancel,
+  //确定
+  ok
+}

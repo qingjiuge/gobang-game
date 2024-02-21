@@ -5,13 +5,17 @@
             width: `${checkBoardConfig.width}px`,
             height: `${checkBoardConfig.height}px`,
             backgroundColor: checkBoardConfig.bgColor
-        }"></div>
+        }">
+            <GameOption v-if="gameOptionsVisibale" @menu-select="menuSelectItem" />
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { Player, PlayerStatus } from '@/Types/player';
 import GameNav from './GameNav.vue';
+import GameOption from './GameOption.vue';
+import { IMenuItem, Options } from '@/Types';
 const props = defineProps({
     player: Player,
 })
@@ -20,13 +24,15 @@ const checkBoardConfig = reactive({
     width: 800,
     height: 800,
     bgColor: '#dab490'
-})
+});
+const gameOptionsVisibale = ref(false);
 const circles = [];
 let canvasEle = ref<HTMLCanvasElement | null>(null);
 let canvasCtx: CanvasRenderingContext2D | null = null;
 let isBlack = true;
 let endGame = false;
-let currentPlayer: Player | null = null
+let currentPlayer: Player | null = null;
+let clickEvent: MouseEvent | null = null;
 
 /**
  * 初始化
@@ -86,12 +92,28 @@ const drawCheckerBoardGrid = (ctx: CanvasRenderingContext2D) => {
         ctx.stroke();
     }
 }
+//操作选择
+const menuSelectItem = (item: IMenuItem) => {
+    const { value } = item;
+    console.log(value)
+    if (Options[value]) {
+        handleCircleClick(clickEvent);
+    } else {
+        console.log('点击了取消')
+    }
+    gameOptionsVisibale.value = false;
+}
 
 /**
  * 点击事件监听
  * @param e
  */
 const handleClick = (e: MouseEvent) => {
+    clickEvent = e;
+    gameOptionsVisibale.value = true;
+}
+//棋子事件
+const handleCircleClick = (e: MouseEvent) => {
     //初始化配置项
     initConfig();
     const { offsetX, offsetY } = e;
@@ -117,7 +139,6 @@ const handleClick = (e: MouseEvent) => {
     //记录玩家的棋子位置
 
     backPlayer(currentPlayer)
-
 }
 
 /**
@@ -322,6 +343,7 @@ onMounted(() => {
     .checker-board {
         display: block;
         margin: 25px auto;
+        position: relative;
     }
 }
 </style>
