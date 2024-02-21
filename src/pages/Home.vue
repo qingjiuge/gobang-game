@@ -3,7 +3,7 @@
         <div class="container">
             <GameMenu v-if="menuItem === 0" @menu-select="getMenuItem" />
             <CheckerBoard v-else-if="menuItem === 1" @back-menu="menuItem = 0" @back-player="getCurrentPlayer"
-                :player="currentPlayer" />
+                @get-game-result="getGameResult" :player="currentPlayer" />
             <DeveloperList v-else-if="menuItem === 5" @back-menu="menuItem = 0" />
         </div>
     </div>
@@ -21,17 +21,22 @@ import { Player, PieceMode, PlayerStatus } from '@/Types/player';
 const menuItem = ref(0);
 
 const gameConfig = {
+    //玩家队列
+    playerQueue: [],
     // 玩家1信息
     player1: {},
     // 玩家2信息
     player2: {},
     // 游戏的状态
     status: 0,
+    // 计时器时间
+    timer: 1000 * 60 * 3,
+    // 游戏结果 获胜玩家id
+    winPlayer: []
 }
 
 // 当前游戏玩家信息
 const currentPlayer = ref<Player>();
-const currentOrder = ref<number>(0);
 //玩家准备队列
 const readyQueue: Player[] = [];
 const getMenuItem = (item: IMenuItem) => {
@@ -39,13 +44,14 @@ const getMenuItem = (item: IMenuItem) => {
         readyGame();
     }
     menuItem.value = item.id;
-    console.log(gameConfig)
 }
 
 // 准备游戏工作
 const readyGame = () => {
     const player1 = createPlayer(PieceMode.player, PieceType.black);
     const player2 = createPlayer(PieceMode.computer, PieceType.white);
+    gameConfig.playerQueue.push(player1);
+    gameConfig.playerQueue.push(player2)
     gameConfig.player1 = player1;
     gameConfig.player2 = player2;
     if (readyQueue.length === 0) {
@@ -79,8 +85,20 @@ const updateCurrentPlayer = (player: Player) => {
 }
 // 监听玩家状态
 const getCurrentPlayer = (player: Player) => {
-    readyQueue.push(player);
-    queueLoop();
+    if (player.status !== PlayerStatus.timeout) {
+        readyQueue.push(player);
+        queueLoop();
+    } else {
+        // 玩家超时处理
+        const winPlayer = gameConfig.playerQueue.filter((item) => item.id !== player.uid)[0] ? gameConfig.playerQueue.filter((item) => item.id !== player.uid)[0] : null;
+        if (winPlayer.uid) {
+            addWinners(winPlayer.uid);
+            gameConfig.status = 2;
+            console.log("玩家超时,游戏结束", `${winPlayer.nickName}获得胜利！`)
+        }
+
+    }
+
 }
 //队列循环
 const queueLoop = () => {
@@ -89,6 +107,15 @@ const queueLoop = () => {
         readPlayer?.updateStatus(PlayerStatus.ready);
         updateCurrentPlayer(readPlayer);
     }
+}
+//添加获胜名单
+const addWinners = (playerId: string) => {
+    gameConfig.winPlayer.push(playerId);
+}
+//获取游戏结果
+const getGameResult = (player: Player) => {
+    gameConfig.status = 2;
+    console.log("游戏结束", `${player.nickName}获得胜利`);
 }
 
 // 监听游戏状态

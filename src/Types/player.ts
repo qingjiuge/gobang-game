@@ -8,6 +8,8 @@ export enum PlayerStatus {
     ready,
     // 完成
     over,
+    // 超时
+    timeout
 }
 
 export enum PieceMode {
