@@ -20,17 +20,14 @@ import GameTimer from './GameTimer.vue';
 import { IMenuItem, Options } from '@/Types';
 import { roomStore } from '@/Stores/room';
 import { GameRoomResultState, GameRoomState } from '@/Types/room';
+import { BoardClass } from '@/Class/Board'
 
 const store = roomStore();
 const props = defineProps({
     player: Player,
 })
 const checkBoard = ref<HTMLDivElement | null>(null);
-const checkBoardConfig = reactive({
-    width: 800,
-    height: 800,
-    bgColor: '#dab490'
-});
+const checkBoardConfig = reactive(new BoardClass())
 const gameOptionsVisible = ref(false);
 const circles = [];
 const minute = ref(0);
