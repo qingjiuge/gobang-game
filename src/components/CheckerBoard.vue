@@ -1,7 +1,7 @@
 <template>
     <div class="game-layout">
         <GameNav @back="backMenu" />
-        <div ref="checkBoard" class="checker-board" :style="{
+        <div ref="checkBoard" class="checker-board"  :style="{
             width: `${checkBoardConfig.width}px`,
             height: `${checkBoardConfig.height}px`,
             backgroundColor: checkBoardConfig.bgColor
@@ -17,7 +17,7 @@ import { Player, PlayerStatus } from '@/Types/player';
 import GameNav from './GameNav.vue';
 import GameOption from './GameOption.vue';
 import GameTimer from './GameTimer.vue';
-import { IMenuItem, ONE_MINUTE, Options } from '@/Types';
+import { IMenuItem, Options } from '@/Types';
 import { roomStore } from '@/Stores/room';
 import { GameRoomResultState, GameRoomState } from '@/Types/room';
 const store = roomStore();
@@ -390,6 +390,7 @@ const countdown = (time: number) => {
 // 更新游戏结果
 const updateResult = (state: GameRoomResultState) => {
     store.setGameState(GameRoomState.END);
+    console.log(store.$state.state)
     store.setResult(props.player, state);
 }
 
