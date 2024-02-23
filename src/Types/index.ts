@@ -21,3 +21,11 @@ export enum Options {
 export  const ONE_HOUR=1000*60*60;
 export const ONE_MINUTE=1000*60;
 export const ONE_SECOND=1000;
+export interface IDeveloper{
+  // 编号
+  id:number,
+  // 名称
+  name:string,
+  // github 地址
+  github:string
+}

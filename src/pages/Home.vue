@@ -35,9 +35,10 @@ const isLoading = ref(false);
 const getMenuItem = (item: IMenuItem) => {
     if (item.id === 1) {
         readyGame();
+        updateLoading(true)
+    }else{
+      menuItem.value=item.id
     }
-    updateLoading(true)
-
 }
 
 // 准备游戏工作
@@ -117,6 +118,7 @@ EventBus.on('resultMenu', (data: { mode: number, item: IMenuItem }) => {
         const { id } = item;
         if (id !== 3) {
             store.$reset();
+            store.setGameState(GameRoomState.RUNNING);
             updateLoading(true)
         } else {
             store.$reset();

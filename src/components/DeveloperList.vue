@@ -1,21 +1,41 @@
 <template>
   <div class="developer-layout">
     <div class="developer-list">
-      <div class="list-item" v-for="name in nameList" :key="name">
-        {{ name }}
-      </div>
+      <a v-for="item in developerList" :key="item.id" :href="item.github" target="_blank">
+        <div class="list-item">
+          {{ item.name }}
+        </div>
+      </a>
+
       <BackButton @back="back" />
     </div>
   </div>
 </template>
 
 <script lang='ts' setup>
+import { IDeveloper } from '@/Types';
 import BackButton from './BackButton.vue';
 
-const nameList = [
-  'qingjiuge',
-  'SmallTeddy'
+const developerList: IDeveloper[] = [
+  {
+    id: 1,
+    name: 'qingjiuge',
+    github: 'https://github.com/qingjiuge'
+  },
+  {
+    id: 2,
+    name: 'SmallTeddy',
+    github: 'https://github.com/SmallTeddy'
+  },
+  {
+    id: 3,
+    name: 'EternalHeart',
+    github: 'https://github.com/wh131462'
+  }
 ]
+const handleClick = (item: number) => {
+  location.href
+}
 
 const emit = defineEmits(["backMenu"])
 
@@ -39,6 +59,13 @@ const back = () => emit("backMenu")
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 24px;
+  a{
+    text-decoration:none;
+    color: #000;
+    &:hover{
+     color:#4007a2 ;
+    }
+  }
 
   .list-item {
     text-align: center;

@@ -52,9 +52,6 @@ const init = () => {
   drawCheckBoard();
   //计时器
   resetTimer();
-  console.log(canvasEle, clickEvent, canvasCtx)
-
-
 }
 //初始化配置项
 const initConfig = () => {
@@ -151,7 +148,7 @@ const handleCircleClick = (e: MouseEvent) => {
   //格子所在的位置
   let i = Math.floor((offsetX + 25) / 50) - 1;
   let j = Math.floor((offsetY + 25) / 50) - 1;
-  console.log(i, j)
+  console.log('当前棋子位置',[i, j]);
   //判断棋子是否重复
   if (hasCircle(i, j)) {
     console.log('该地方已经存在棋子!')
@@ -226,7 +223,7 @@ const hasCircle = (i: number, j: number) => {
  * @param j
  */
 const checkCircleLine = (i: number, j: number) => {
-  console.log(circles)
+  console.log('棋子位置',circles)
   return checkVertical(i, j) || checkHorizontal(i, j) || checkNW2SE(i, j) || checkNE2SW(i, j);
 }
 
@@ -376,7 +373,6 @@ const countdown = (time: number) => {
 // 更新游戏结果
 const updateResult = (state: GameRoomResultState) => {
   store.setGameState(GameRoomState.END);
-  console.log(store.$state.state)
   store.setResult(props.player, state);
 }
 
