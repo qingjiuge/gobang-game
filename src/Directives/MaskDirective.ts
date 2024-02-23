@@ -8,15 +8,15 @@ const MaskDirective = {
         const ele = document.getElementById(id);
         const { value } = bidding;
         if (value) {
-            if(ele){
-                 ele.style.display='black';
-            }else{
+            if (ele) {
+                ele.style.display = 'black';
+            } else {
                 render(maskVNode, document.body)
             }
-            
+
         } else {
             if (ele) {
-               ele.style.display='none';
+                ele.style.display = 'none';
             };
 
         }

@@ -20,13 +20,13 @@ import { ONE_MINUTE } from '@/Types';
 import { reactive, ref, onMounted } from 'vue'
 const emit = defineEmits(["backTime"]);
 const props = defineProps({
-    minute:{
-        type:Number,
-        default:0
+    minute: {
+        type: Number,
+        default: 0
     },
-    second:{
-        type:Number,
-        default:0
+    second: {
+        type: Number,
+        default: 0
     }
 })
 /**

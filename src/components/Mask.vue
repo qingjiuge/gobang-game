@@ -4,10 +4,10 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { reactive,ref,onMounted } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 </script>
 <style lang="scss" scoped>
-.mask{
+.mask {
     width: 100%;
     height: 100%;
     position: fixed;

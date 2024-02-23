@@ -1,6 +1,6 @@
 <template>
     <div class="mask" v-if="props.visibel">
-        <div class="result-menu" >
+        <div class="result-menu">
             <div class="result-menu-tip">{{ getPlayResult() }}</div>
             <div class="result-menu-button">
                 <div class="result-menu-button-item" v-for="item in  getButtonList(store.$state.mode)"
@@ -116,7 +116,8 @@ const handleClick = (item: IMenuItem) => {
     }
 
 }
-.mask{
+
+.mask {
     width: 100%;
     height: 100%;
     position: fixed;

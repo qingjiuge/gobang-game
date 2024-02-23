@@ -59,11 +59,13 @@ const back = () => emit("backMenu")
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 24px;
-  a{
-    text-decoration:none;
+
+  a {
+    text-decoration: none;
     color: #000;
-    &:hover{
-     color:#4007a2 ;
+
+    &:hover {
+      color: #4007a2;
     }
   }
 

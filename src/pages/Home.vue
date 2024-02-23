@@ -36,8 +36,8 @@ const getMenuItem = (item: IMenuItem) => {
     if (item.id === 1) {
         readyGame();
         updateLoading(true)
-    }else{
-      menuItem.value=item.id
+    } else {
+        menuItem.value = item.id
     }
 }
 
