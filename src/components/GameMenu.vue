@@ -1,13 +1,13 @@
 <template>
     <div class="game-menu">
-        <div class="game-menu-item" v-for=" (item, i) in menuList" :key="item.id" @click="menuSelectItem(item)">
+        <div class="game-menu-item" v-for="(item, i) in menuList" :key="item.id" @click="menuSelectItem(item)">
             {{ item.label }}
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { IMenuItem } from '@/Types'
+import type { IMenuItem } from 'src/types'
 
 /**
  * 菜单

@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 
-import { ONE_MINUTE } from '@/Types';
+import { ONE_MINUTE } from 'src/types';
 import { reactive, ref, onMounted } from 'vue'
 const emit = defineEmits(["backTime"]);
 const props = defineProps({

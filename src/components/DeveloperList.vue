@@ -13,7 +13,7 @@
 </template>
 
 <script lang='ts' setup>
-import { IDeveloper } from '@/Types';
+import { IDeveloper } from 'src/types';
 import BackButton from './BackButton.vue';
 
 const developerList: IDeveloper[] = [

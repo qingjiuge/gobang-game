@@ -5,25 +5,25 @@
             <CheckerBoard v-else-if="menuItem === 1" @back-menu="menuItem = 0" @back-player="getCurrentPlayer"
                 @get-game-result="getGameResult" :player="currentPlayer" />
             <DeveloperList v-else-if="menuItem === 5" @back-menu="menuItem = 0" />
-            <ResultMenu :visibel="isShowResult()" :player="currentPlayer" />
-            <Loadding v-if="isLoading" @on-progress="getCurrentProgress" @back-progress="overProgress" />
+            <ResultMenu :visible="isShowResult()" :player="currentPlayer" />
+            <Loading v-if="isLoading" @on-progress="getCurrentProgress" @back-progress="overProgress" />
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import CheckerBoard from '@/Components/CheckerBoard.vue';
-import GameMenu from '@/Components/GameMenu.vue';
-import DeveloperList from '@/Components/DeveloperList.vue';
-import ResultMenu from '@/Components/ResultMenu.vue';
-import Loadding from '@/Components/Loadding.vue';
-import { roomStore } from '@/Stores/room'
-import { IMenuItem } from '@/Types';
-import { PieceType, Piece } from '@/Types/piece';
-import { Player, PieceMode, PlayerStatus } from '@/Types/player';
-import { uuid } from '@/Until/tools';
-import { GameRoomMode, GameRoomResult, GameRoomState } from '@/Types/room';
-import EventBus from '@/Until/event-bus';
+import CheckerBoard from '@/components/CheckerBoard.vue';
+import GameMenu from '@/components/GameMenu.vue';
+import DeveloperList from '@/components/DeveloperList.vue';
+import ResultMenu from '@/components/ResultMenu.vue';
+import Loading from '@/components/Loading.vue';
+import { roomStore } from '@/stores/room'
+import { IMenuItem } from 'src/types';
+import { PieceType, Piece } from '@/types/piece';
+import { Player, PieceMode, PlayerStatus } from '@/types/player';
+import { uuid } from '@/utils/tools';
+import { GameRoomMode, GameRoomResult, GameRoomState } from '@/types/room';
+import EventBus from '@/utils/event-bus';
 const menuItem = ref(0);
 const store = roomStore();
 // 当前游戏玩家信息
@@ -132,8 +132,8 @@ const isShowResult = () => {
     console.log(store.$state.state === GameRoomState.END)
     return store.$state.state === GameRoomState.END;
 }
-const updateLoading = (visibel: boolean) => {
-    isLoading.value = visibel;
+const updateLoading = (visible: boolean) => {
+    isLoading.value = visible;
 }
 const getCurrentProgress = (value: number) => {
     console.log('当前进度', value)

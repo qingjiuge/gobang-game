@@ -1,4 +1,4 @@
-import MaskDirective from '@/Directives/MaskDirective';
+import MaskDirective from "@/directives/MaskDirective";
 
 const directives = { // 指令对象
     'mask': MaskDirective

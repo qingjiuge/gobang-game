@@ -1,5 +1,5 @@
-import Mask from "@/Components/Mask.vue";
-import { uuid } from "@/Until/tools";
+import Mask from "@/components/Mask.vue";
+import { uuid } from "@/utils/tools";
 import { render } from "vue";
 const MaskDirective = {
     mounted(el: HTMLElement, bidding, vNode) {
@@ -17,10 +17,10 @@ const MaskDirective = {
         } else {
             if (ele) {
                 ele.style.display = 'none';
-            };
+            }
 
         }
 
     }
 }
-export default MaskDirective
+export default MaskDirective;

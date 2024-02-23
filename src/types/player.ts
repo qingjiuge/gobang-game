@@ -1,4 +1,4 @@
-import { uuid } from "@/Until/tools";
+import { uuid } from "@/utils/tools";
 import { Piece } from "./piece";
 
 export enum PlayerStatus {

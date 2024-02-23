@@ -1,9 +1,9 @@
-import { ONE_MINUTE } from '@/Types'
-import { GameRoomMode, GameRoomState, GameRoomType } from '@/Types/room'
+import { ONE_MINUTE } from '@/types'
+import { GameRoomMode, GameRoomState, GameRoomType } from '@/types/room'
 import { defineStore } from 'pinia'
-import { Player } from './../Types/player';
-import { PieceType } from '@/Types/piece';
-import { getRandomInt } from '@/Until/tools';
+import { Player } from '@/types/player';
+import { PieceType } from '@/types/piece';
+import { getRandomInt } from '@/utils/tools';
 export const roomStore = defineStore('room', {
     state: () => {
         //当前对局的信息

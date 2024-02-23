@@ -6,7 +6,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { IMenuItem } from '@/Types';
+import { IMenuItem } from 'src/types';
 import { reactive, ref, onMounted } from 'vue'
 const emits = defineEmits(["menuSelect"])
 const optionList: IMenuItem[] = [

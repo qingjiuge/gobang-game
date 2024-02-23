@@ -13,14 +13,14 @@
 </template>
 
 <script lang="ts" setup>
-import { Player, PlayerStatus } from '@/Types/player';
+import { Player, PlayerStatus } from '@/types/player';
 import GameNav from './GameNav.vue';
 import GameOption from './GameOption.vue';
 import GameTimer from './GameTimer.vue';
-import { IMenuItem, Options } from '@/Types';
-import { roomStore } from '@/Stores/room';
-import { GameRoomResultState, GameRoomState } from '@/Types/room';
-import { BoardClass } from '@/Class/Board'
+import { IMenuItem, Options } from '@/types/index';
+import { roomStore } from '@/stores/room';
+import { GameRoomResultState, GameRoomState } from '@/types/room';
+import { BoardClass } from '@/classes/Board'
 
 const store = roomStore();
 const props = defineProps({

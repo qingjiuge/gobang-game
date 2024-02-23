@@ -1,5 +1,5 @@
 <template>
-    <div class="mask" v-if="props.visibel">
+    <div class="mask" v-if="props.visible">
         <div class="result-menu">
             <div class="result-menu-tip">{{ getPlayResult() }}</div>
             <div class="result-menu-button">
@@ -12,14 +12,14 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { roomStore } from '@/Stores/room';
-import { IMenuItem } from '@/Types';
-import { Player } from '@/Types/player';
-import { GameRoomMode, GameRoomResultState } from '@/Types/room';
-import EventBus from '@/Until/event-bus';
+import { roomStore } from '@/stores/room';
+import { IMenuItem } from 'src/types';
+import { Player } from '@/types/player';
+import { GameRoomMode, GameRoomResultState } from '@/types/room';
+import EventBus from '@/utils/event-bus';
 const store = roomStore();
 const props = defineProps({
-    visibel: {
+    visible: {
         type: Boolean,
         default: false
     },

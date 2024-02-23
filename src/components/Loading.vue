@@ -1,5 +1,5 @@
 <template>
-    <div class="loadding">
+    <div class="loading">
         <div class="tip">{{ tip }}</div>
         <div class="container">
             <div class="bar" :style="{ width: getWidth(progress) }"></div>
@@ -43,7 +43,7 @@ const getWidth = (num: number) => {
 const emit = defineEmits(['backProgress', 'onProgress'])
 </script>
 <style lang="scss" scoped>
-.loadding {
+.loading {
     position: absolute;
     width: 100%;
     height: 100%;
