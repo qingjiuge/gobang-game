@@ -51,6 +51,7 @@ const init = () => {
     drawCheckBoard();
     //计时器
     resetTimer();
+    console.log(canvasEle,clickEvent,canvasCtx)
 
 
 
@@ -89,7 +90,7 @@ const drawCheckerBoardGrid = (ctx: CanvasRenderingContext2D) => {
     //画棋盘
     for (let i = 1; i < 16; i++) {
         //初始化棋子记录
-        circles[i] = [];
+        circles[i] =Array(15).fill(null);
         //把线段的开头表示出来
         //横线
         ctx.moveTo(50, 50 * i);
@@ -147,6 +148,7 @@ const handleCircleClick = (e: MouseEvent) => {
     //格子所在的位置
     let i = Math.floor((offsetX + 25) / 50);
     let j = Math.floor((offsetY + 25) / 50);
+    console.log(i,j)
     //判断棋子是否重复
     if (hasCircle(i, j)) {
         console.log('该地方已经存在棋子!')
@@ -221,6 +223,7 @@ const hasCircle = (i: number, j: number) => {
  * @param j
  */
 const checkCircleLine = (i: number, j: number) => {
+    console.log(circles)
     return checkVertical(i, j) || checkHorizontal(i, j) || checkNW2SE(i, j) || checkNE2SW(i, j);
 }
 
