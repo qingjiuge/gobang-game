@@ -30,9 +30,9 @@ const countTime = () => {
             setTimeout(() => {
                 tip.value = '游戏加载完成'
                 emit('backProgress', true)
-            }, 2000)
+            }, 1000)
         }
-    }, 1000)
+    }, 100)
 }
 const getProgress = (num: number) => {
     return num * 10;
