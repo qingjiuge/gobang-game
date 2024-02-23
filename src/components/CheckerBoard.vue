@@ -6,7 +6,7 @@
             height: `${checkBoardConfig.height}px`,
             backgroundColor: checkBoardConfig.bgColor
         }">
-            <GameOption v-if="gameOptionsVisibale" @menu-select="menuSelectItem" />
+            <GameOption v-if="gameOptionsVisible" @menu-select="menuSelectItem" />
             <GameTimer :minute="minute" :second="second" />
         </div>
     </div>
@@ -30,7 +30,7 @@ const checkBoardConfig = reactive({
     height: 800,
     bgColor: '#dab490'
 });
-const gameOptionsVisibale = ref(false);
+const gameOptionsVisible = ref(false);
 const circles = [];
 const minute = ref(0);
 const second = ref(0);
@@ -113,7 +113,7 @@ const menuSelectItem = (item: IMenuItem) => {
     } else {
         console.log('点击了取消')
     }
-    gameOptionsVisibale.value = false;
+    gameOptionsVisible.value = false;
 }
 /**
  * 重置计时器
@@ -133,7 +133,7 @@ const handleClick = (e: MouseEvent) => {
     initConfig();
     if (store.getGameState !== GameRoomState.RUNNING) return;
     clickEvent = e;
-    gameOptionsVisibale.value = true;
+    gameOptionsVisible.value = true;
     // timer=null;
 }
 //棋子事件
