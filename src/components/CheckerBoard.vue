@@ -7,7 +7,7 @@
             backgroundColor: checkBoardConfig.bgColor
         }">
             <GameOption v-if="gameOptionsVisibale" @menu-select="menuSelectItem" />
-            <GameTimer @back-time="backTime" :set-time="times" />
+            <GameTimer :minute="minute" :second="second" />
         </div>
     </div>
 </template>
@@ -18,11 +18,11 @@ import GameNav from './GameNav.vue';
 import GameOption from './GameOption.vue';
 import GameTimer from './GameTimer.vue';
 import { IMenuItem, ONE_MINUTE, Options } from '@/Types';
+import { roomStore } from '@/Stores/room';
+import { GameRoomResultState, GameRoomState } from '@/Types/room';
+const store = roomStore();
 const props = defineProps({
     player: Player,
-    gameStatus: {
-        type: Number
-    },
 })
 const checkBoard = ref<HTMLDivElement | null>(null);
 const checkBoardConfig = reactive({
@@ -30,16 +30,16 @@ const checkBoardConfig = reactive({
     height: 800,
     bgColor: '#dab490'
 });
-const times = ref<number>(ONE_MINUTE * 2);
 const gameOptionsVisibale = ref(false);
 const circles = [];
+const minute = ref(0);
+const second = ref(0);
 let canvasEle = ref<HTMLCanvasElement | null>(null);
 let canvasCtx: CanvasRenderingContext2D | null = null;
 let isBlack = true;
 let endGame = false;
-let currentPlayer = () => { return props.player };
 let clickEvent: MouseEvent | null = null;
-
+let timer = null;
 /**
  * 初始化
  */
@@ -49,11 +49,15 @@ const init = () => {
 
     //画棋盘
     drawCheckBoard();
+    //计时器
+    resetTimer();
+
+
 
 }
 //初始化配置项
 const initConfig = () => {
-    const { pieceType } = currentPlayer();
+    const { pieceType } = props.player;
     isBlack = Boolean(pieceType.type);
 }
 
@@ -102,11 +106,22 @@ const menuSelectItem = (item: IMenuItem) => {
     const { value } = item;
     if (Options[value]) {
         handleCircleClick(clickEvent);
-        times.value = ONE_MINUTE * 2;
+        //如果是轮流下棋才重置  游戏结束不执行该代码 因为click事件先执行
+        if (timer) {
+            resetTimer();
+        }
     } else {
         console.log('点击了取消')
     }
     gameOptionsVisibale.value = false;
+}
+/**
+ * 重置计时器
+ */
+const resetTimer = () => {
+    clearInterval(timer);
+    timer = null;
+    countdown(store.$state.stepTime);
 }
 
 /**
@@ -114,12 +129,12 @@ const menuSelectItem = (item: IMenuItem) => {
  * @param e
  */
 const handleClick = (e: MouseEvent) => {
-    if (props.gameStatus === 2) return;
     //初始化配置项
     initConfig();
-    if (currentPlayer().status !== PlayerStatus.ready) return;
+    if (store.getGameState !== GameRoomState.RUNNING) return;
     clickEvent = e;
     gameOptionsVisibale.value = true;
+    // timer=null;
 }
 //棋子事件
 const handleCircleClick = (e: MouseEvent) => {
@@ -140,15 +155,17 @@ const handleCircleClick = (e: MouseEvent) => {
     drawCircle(i, j);
     endGame = checkCircleLine(i, j);
     if (endGame) {
-        getGameResult(currentPlayer())
+        clearInterval(timer);
+        timer = null;
+        getGameResult()
         return;
     }
     // isBlack = !isBlack;
     //将当前玩家的状态置为完成
-    currentPlayer().updateStatus(PlayerStatus.over);
+    props.player.updateStatus(PlayerStatus.over);
     //记录玩家的棋子位置
 
-    backPlayer(currentPlayer())
+    backPlayer(props.player)
 }
 
 /**
@@ -333,21 +350,49 @@ const checkNE2SW = (row: number, col: number) => {
     return count >= 5;
 }
 
+
 const emit = defineEmits(["backMenu", 'backPlayer', 'getGameResult'])
 
 const backMenu = () => emit("backMenu")
 const backPlayer = (player: Player) => emit('backPlayer', player);
 //获取游戏结果
-const getGameResult = (player: Player) => {
-    emit('getGameResult', player)
+const getGameResult = () => {
+    store.setLocation(circles);
+    updateResult(GameRoomResultState.WIN);
+    emit('getGameResult', store.$state.result)
 }
-//超时处理
-const backTime = () => {
-    //将玩家状态标记为超时
-    currentPlayer().updateStatus(PlayerStatus.timeout);
-    //记录玩家的棋子位置
-    backPlayer(currentPlayer())
+//倒计时函数
+const countdown = (time: number) => {
+    let remainingTime = time;
+
+    // 更新剩余时间
+    function updateRemainingTime() {
+        remainingTime -= 1000; // 每秒减少1000毫秒
+        const minutes = Math.floor(remainingTime / 60000);
+        const seconds = Math.floor((remainingTime % 60000) / 1000);
+
+        // 在这里更新你的倒计时显示，例如在页面上显示剩余时间
+        minute.value = minutes;
+        second.value = seconds;
+        // 如果倒计时结束，清除计时器并执行结束操作
+        if (remainingTime <= 0) {
+            clearInterval(timer);
+            console.log('倒计时结束');
+            // 这里可以添加倒计时结束时的代码
+            updateResult(GameRoomResultState.LOSE);
+        }
+    }
+
+    // 每秒更新一次剩余时间
+    timer = setInterval(updateRemainingTime, 1000);
+
 }
+// 更新游戏结果
+const updateResult = (state: GameRoomResultState) => {
+    store.setGameState(GameRoomState.END);
+    store.setResult(props.player, state);
+}
+
 onMounted(() => {
     init()
 })

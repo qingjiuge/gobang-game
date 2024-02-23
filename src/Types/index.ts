@@ -1,3 +1,7 @@
+export interface GameInfoType {
+  
+}
+
 export interface IMenuItem {
   // 菜单项
   // 属性：

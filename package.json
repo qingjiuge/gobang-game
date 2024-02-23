@@ -10,9 +10,10 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "pinia": "^2.1.7",
+    "sass": "^1.70.0",
     "vue": "^3.3.11",
-    "vue-router": "^4.2.5",
-    "sass": "^1.70.0"
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.5",

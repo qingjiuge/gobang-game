@@ -13,28 +13,14 @@
 import CheckerBoard from '@/Components/CheckerBoard.vue';
 import GameMenu from '@/Components/GameMenu.vue';
 import DeveloperList from '@/Components/DeveloperList.vue';
-
+import { roomStore } from '@/Stores/room'
 import { IMenuItem } from '@/Types';
 import { PieceType, Piece } from '@/Types/piece';
 import { Player, PieceMode, PlayerStatus } from '@/Types/player';
-
+import { uuid } from '@/Until/tools';
+import { GameRoomResult, GameRoomState } from '@/Types/room';
 const menuItem = ref(0);
-
-const gameConfig = {
-    //玩家队列
-    playerQueue: [],
-    // 玩家1信息
-    player1: {},
-    // 玩家2信息
-    player2: {},
-    // 游戏的状态 0未开始 1进行中 2结束
-    status: 0,
-    // 计时器时间
-    timer: 1000 * 60 * 3,
-    // 游戏结果 获胜玩家id
-    winPlayer: []
-}
-
+const store = roomStore();
 // 当前游戏玩家信息
 const currentPlayer = ref<Player>();
 //玩家准备队列
@@ -48,22 +34,34 @@ const getMenuItem = (item: IMenuItem) => {
 
 // 准备游戏工作
 const readyGame = () => {
-    const player1 = createPlayer(PieceMode.player, PieceType.black);
-    const player2 = createPlayer(PieceMode.computer, PieceType.white);
-    gameConfig.playerQueue.push(player1);
-    gameConfig.playerQueue.push(player2)
-    gameConfig.player1 = player1;
-    gameConfig.player2 = player2;
-    if (readyQueue.length === 0) {
-        readyQueue.push(player1);
-        readyQueue.push(player2);
-    }
+    createPlayer();
+    createComputer();
+    //生成游戏房间id
+    store.setRoomId(uuid());
+    store.setGameState(GameRoomState.RUNNING);
+    //开始游戏
     queueLoop();
-    gameConfig.status = 1
+    console.log(currentPlayer)
+}
+//创建玩家
+const createPlayer = () => {
+    const player = createGamePlayer(PieceMode.player, store.getPieceTypes);
+    store.addRoomPlayer(player);
+    readyQueue.push(player);
+}
+//创建电脑
+const createComputer = () => {
+    if (!store.isOnlineMode) {
+        const player = createGamePlayer(PieceMode.computer, store.getPieceTypes);
+        store.addRoomPlayer(player);
+        readyQueue.push(player);
+    }
+
 }
 
+
 // 创建玩家
-const createPlayer = (mode: PieceMode, type: PieceType, id: string = null) => {
+const createGamePlayer = (mode: PieceMode, type: PieceType, id: string = null) => {
     const player = new Player();
     player.updateMode(mode);
     player.updateUid(id);
@@ -88,15 +86,6 @@ const getCurrentPlayer = (player: Player) => {
     if (player.status !== PlayerStatus.timeout) {
         readyQueue.push(player);
         queueLoop();
-    } else {
-        // 玩家超时处理
-        const winPlayer = gameConfig.playerQueue.filter((item) => item.id !== player.uid)[0] ? gameConfig.playerQueue.filter((item) => item.id !== player.uid)[0] : null;
-        if (winPlayer.uid) {
-            addWinners(winPlayer.uid);
-            gameConfig.status = 2;
-            console.log("玩家超时,游戏结束", `${winPlayer.nickName}获得胜利！`)
-        }
-
     }
 
 }
@@ -108,24 +97,12 @@ const queueLoop = () => {
         updateCurrentPlayer(readPlayer);
     }
 }
-//添加获胜名单
-const addWinners = (playerId: string) => {
-    gameConfig.winPlayer.push(playerId);
-}
 //获取游戏结果
-const getGameResult = (player: Player) => {
-    gameConfig.status = 2;
-    console.log("游戏结束", `${player.nickName}获得胜利`);
+const getGameResult = (result: GameRoomResult) => {
+    console.log("游戏结束", `${result.player}:${result.state}`);
+    console.log('当前对局信息:', store.$state)
 }
 
-// 监听游戏状态
-const watchGameStatus = () => {
-    watch(() => gameConfig.status, (newValue, oldValue) => {
-        if (newValue === 1) {
-            readyGame();
-        }
-    })
-}
 </script>
 
 <style lang="scss" scoped>
