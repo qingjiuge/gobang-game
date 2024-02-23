@@ -1,34 +1,35 @@
 <template>
-    <div class="game-layout">
-        <GameNav @back="backMenu" />
-        <div ref="checkBoard" class="checker-board"  :style="{
+  <div class="game-layout">
+    <GameNav @back="backMenu"/>
+    <div ref="checkBoard" class="checker-board" :style="{
             width: `${checkBoardConfig.width}px`,
             height: `${checkBoardConfig.height}px`,
             backgroundColor: checkBoardConfig.bgColor
         }">
-            <GameOption v-if="gameOptionsVisible" @menu-select="menuSelectItem" />
-            <GameTimer :minute="minute" :second="second" />
-        </div>
+      <GameOption v-if="gameOptionsVisible" @menu-select="menuSelectItem"/>
+      <GameTimer :minute="minute" :second="second"/>
     </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { Player, PlayerStatus } from '@/Types/player';
+import {Player, PlayerStatus} from '@/Types/player';
 import GameNav from './GameNav.vue';
 import GameOption from './GameOption.vue';
 import GameTimer from './GameTimer.vue';
-import { IMenuItem, Options } from '@/Types';
-import { roomStore } from '@/Stores/room';
-import { GameRoomResultState, GameRoomState } from '@/Types/room';
+import {IMenuItem, Options} from '@/Types';
+import {roomStore} from '@/Stores/room';
+import {GameRoomResultState, GameRoomState} from '@/Types/room';
+
 const store = roomStore();
 const props = defineProps({
-    player: Player,
+  player: Player,
 })
 const checkBoard = ref<HTMLDivElement | null>(null);
 const checkBoardConfig = reactive({
-    width: 800,
-    height: 800,
-    bgColor: '#dab490'
+  width: 800,
+  height: 800,
+  bgColor: '#dab490'
 });
 const gameOptionsVisible = ref(false);
 const circles = [];
@@ -44,42 +45,43 @@ let timer = null;
  * 初始化
  */
 const init = () => {
-    // 初始化棋盘
-    canvasEle.value = createCanvas();
+  // 初始化棋盘
+  canvasEle.value = createCanvas();
 
-    //画棋盘
-    drawCheckBoard();
-    //计时器
-    resetTimer();
-    console.log(canvasEle,clickEvent,canvasCtx)
-
+  //画棋盘
+  drawCheckBoard();
+  //计时器
+  resetTimer();
+  console.log(canvasEle, clickEvent, canvasCtx)
 
 
 }
 //初始化配置项
 const initConfig = () => {
-    const { pieceType } = props.player;
-    isBlack = Boolean(pieceType.type);
+  const {pieceType} = props.player;
+  isBlack = Boolean(pieceType.type);
 }
 
 /**
  * 创建canvas 画布
  */
 const createCanvas = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = checkBoard.value.offsetWidth;
-    canvas.height = checkBoard.value.offsetHeight;
-    checkBoard.value.append(canvas);
-    canvas.addEventListener('click', (e) => { handleClick(e) })
-    return canvas;
+  const canvas = document.createElement('canvas');
+  canvas.width = checkBoard.value.offsetWidth;
+  canvas.height = checkBoard.value.offsetHeight;
+  checkBoard.value.append(canvas);
+  canvas.addEventListener('click', (e) => {
+    handleClick(e)
+  })
+  return canvas;
 }
 
 /**
  * 绘制棋盘
  */
 const drawCheckBoard = () => {
-    canvasCtx = canvasEle.value.getContext('2d');
-    drawCheckerBoardGrid(canvasCtx);
+  canvasCtx = canvasEle.value.getContext('2d');
+  drawCheckerBoardGrid(canvasCtx);
 }
 
 /**
@@ -87,42 +89,43 @@ const drawCheckBoard = () => {
  * @param ctx
  */
 const drawCheckerBoardGrid = (ctx: CanvasRenderingContext2D) => {
-    //画棋盘
-    for (let i = 1; i < 16; i++) {
-        //初始化棋子记录
-        circles[i] =Array(15).fill(null);
-        //把线段的开头表示出来
-        //横线
-        ctx.moveTo(50, 50 * i);
-        ctx.lineTo(750, 50 * i);
-        ctx.stroke();
-        //纵线
-        ctx.moveTo(50 * i, 50);
-        ctx.lineTo(50 * i, 750);
-        ctx.stroke();
-    }
+  //画棋盘
+  for (let i = 0; i < 15; i++) {
+    //初始化棋子记录
+    circles[i] = Array(15).fill(null);
+    const lineNum = i + 1;
+    //把线段的开头表示出来
+    //横线
+    ctx.moveTo(50, 50 * lineNum);
+    ctx.lineTo(750, 50 * lineNum);
+    ctx.stroke();
+    //纵线
+    ctx.moveTo(50 * lineNum, 50);
+    ctx.lineTo(50 * lineNum, 750);
+    ctx.stroke();
+  }
 }
 //操作选择
 const menuSelectItem = (item: IMenuItem) => {
-    const { value } = item;
-    if (Options[value]) {
-        handleCircleClick(clickEvent);
-        //如果是轮流下棋才重置  游戏结束不执行该代码 因为click事件先执行
-        if (timer) {
-            resetTimer();
-        }
-    } else {
-        console.log('点击了取消')
+  const {value} = item;
+  if (Options[value]) {
+    handleCircleClick(clickEvent);
+    //如果是轮流下棋才重置  游戏结束不执行该代码 因为click事件先执行
+    if (timer) {
+      resetTimer();
     }
-    gameOptionsVisible.value = false;
+  } else {
+    console.log('点击了取消')
+  }
+  gameOptionsVisible.value = false;
 }
 /**
  * 重置计时器
  */
 const resetTimer = () => {
-    clearInterval(timer);
-    timer = null;
-    countdown(store.$state.stepTime);
+  clearInterval(timer);
+  timer = null;
+  countdown(store.$state.stepTime);
 }
 
 /**
@@ -130,44 +133,44 @@ const resetTimer = () => {
  * @param e
  */
 const handleClick = (e: MouseEvent) => {
-    //初始化配置项
-    initConfig();
-    if (store.getGameState !== GameRoomState.RUNNING) return;
-    clickEvent = e;
-    gameOptionsVisible.value = true;
-    // timer=null;
+  //初始化配置项
+  initConfig();
+  if (store.getGameState !== GameRoomState.RUNNING) return;
+  clickEvent = e;
+  gameOptionsVisible.value = true;
+  // timer=null;
 }
 //棋子事件
 const handleCircleClick = (e: MouseEvent) => {
 
-    const { offsetX, offsetY } = e;
-    if (judgeCircleBorder(offsetX, offsetY)) return;
-    if (endGame) {
-        return;
-    }
-    //格子所在的位置
-    let i = Math.floor((offsetX + 25) / 50);
-    let j = Math.floor((offsetY + 25) / 50);
-    console.log(i,j)
-    //判断棋子是否重复
-    if (hasCircle(i, j)) {
-        console.log('该地方已经存在棋子!')
-        return;
-    }
-    drawCircle(i, j);
-    endGame = checkCircleLine(i, j);
-    if (endGame) {
-        clearInterval(timer);
-        timer = null;
-        getGameResult()
-        return;
-    }
-    // isBlack = !isBlack;
-    //将当前玩家的状态置为完成
-    props.player.updateStatus(PlayerStatus.over);
-    //记录玩家的棋子位置
+  const {offsetX, offsetY} = e;
+  if (judgeCircleBorder(offsetX, offsetY)) return;
+  if (endGame) {
+    return;
+  }
+  //格子所在的位置
+  let i = Math.floor((offsetX + 25) / 50) - 1;
+  let j = Math.floor((offsetY + 25) / 50) - 1;
+  console.log(i, j)
+  //判断棋子是否重复
+  if (hasCircle(i, j)) {
+    console.log('该地方已经存在棋子!')
+    return;
+  }
+  drawCircle(i, j);
+  endGame = checkCircleLine(i, j);
+  if (endGame) {
+    clearInterval(timer);
+    timer = null;
+    getGameResult()
+    return;
+  }
+  // isBlack = !isBlack;
+  //将当前玩家的状态置为完成
+  props.player.updateStatus(PlayerStatus.over);
+  //记录玩家的棋子位置
 
-    backPlayer(props.player)
+  backPlayer(props.player)
 }
 
 /**
@@ -176,7 +179,7 @@ const handleCircleClick = (e: MouseEvent) => {
  * @param y
  */
 const judgeCircleBorder = (x: number, y: number) => {
-    return x < 25 || y < 25 || x > 775 || y > 775
+  return x < 25 || y < 25 || x > 775 || y > 775
 }
 
 /**
@@ -185,27 +188,27 @@ const judgeCircleBorder = (x: number, y: number) => {
  * @param j
  */
 const drawCircle = (i: number, j: number) => {
-    const x = i * 50;
-    const y = j * 50;
-    canvasCtx.beginPath();
-    canvasCtx.arc(x, y, 20, 0, Math.PI * 2);
-    //把对应的棋子存到我们的二维数组中
-    circles[i][j] = isBlack ? 'black' : 'white';
+  const x = (i+1) * 50;
+  const y = (j+1) * 50;
+  canvasCtx.beginPath();
+  canvasCtx.arc(x, y, 20, 0, Math.PI * 2);
+  //把对应的棋子存到我们的二维数组中
+  circles[i][j] = isBlack ? 'black' : 'white';
 
-    //根据当前是哪种棋子，判断棋子的颜色
-    let tx = isBlack ? x - 10 : x + 10;
-    let ty = isBlack ? y - 10 : y + 10;
-    let g = canvasCtx.createRadialGradient(tx, ty, 0, tx, ty, 30);
-    g.addColorStop(0, '#ccc');
-    g.addColorStop(1, isBlack ? '#000' : '#fff');
-    canvasCtx.fillStyle = g;
-    //设置阴影美化棋子
-    canvasCtx.shadowBlur = 4;
-    canvasCtx.shadowColor = '#333';
-    canvasCtx.shadowOffsetX = 4;
-    canvasCtx.shadowOffsetY = 4;
-    canvasCtx.fill();
-    canvasCtx.closePath();
+  //根据当前是哪种棋子，判断棋子的颜色
+  let tx = isBlack ? x - 10 : x + 10;
+  let ty = isBlack ? y - 10 : y + 10;
+  let g = canvasCtx.createRadialGradient(tx, ty, 0, tx, ty, 30);
+  g.addColorStop(0, '#ccc');
+  g.addColorStop(1, isBlack ? '#000' : '#fff');
+  canvasCtx.fillStyle = g;
+  //设置阴影美化棋子
+  canvasCtx.shadowBlur = 4;
+  canvasCtx.shadowColor = '#333';
+  canvasCtx.shadowOffsetX = 4;
+  canvasCtx.shadowOffsetY = 4;
+  canvasCtx.fill();
+  canvasCtx.closePath();
 }
 
 /**
@@ -214,7 +217,7 @@ const drawCircle = (i: number, j: number) => {
  * @param j
  */
 const hasCircle = (i: number, j: number) => {
-    return circles[i][j]
+  return !!circles[i][j]
 }
 
 /**
@@ -223,8 +226,8 @@ const hasCircle = (i: number, j: number) => {
  * @param j
  */
 const checkCircleLine = (i: number, j: number) => {
-    console.log(circles)
-    return checkVertical(i, j) || checkHorizontal(i, j) || checkNW2SE(i, j) || checkNE2SW(i, j);
+  console.log(circles)
+  return checkVertical(i, j) || checkHorizontal(i, j) || checkNW2SE(i, j) || checkNE2SW(i, j);
 }
 
 /**
@@ -233,33 +236,25 @@ const checkCircleLine = (i: number, j: number) => {
  * @param col
  */
 const checkVertical = (row: number, col: number) => {
-    //定义一个变量定义向上的次数
-    let up = 0;
-    //定义一个变量定义向下的次数
-    let down = 0;
-    let times = 0;
-    //当前总共有几个连在一起
-    let count = 1;//初始值为1 本身算一个
-    let target = isBlack ? 'black' : 'white';
-    //为了避免死循环，给一个循环上限
-    while (times < 10000) {
-        times++;
-        //以row和col为起点在二维数组上向上和向下查找
-        //向上查找
-        up++;
-        if (circles[row][col - up] && circles[row][col - up] === target) {
-            count++;
-        }
-
-        //向下查找
-        down++;
-        if (circles[row][col + down] && circles[row][col + down] === target) {
-            count++
-        }
-        //如果棋子大于指定次数 或者棋子不是连续的
-        if (count >= 5 || (circles[row][col - up]) !== target && circles[row][col + down] !== target) break;
+  let target = circles[row][col];
+  // 垂直方向的检测 只需要检查row +-
+  let up = 0;
+  let down = 0;
+  let single = [];
+  for (let i = 0; i < 5; i++) {
+    if(!single.includes('up') && row - up>=0 && circles[row - up][col] == target){
+      up ++;
+    }else{
+      single.push('up');
     }
-    return count >= 5;
+    // 严重建议加一个全局变量 用于控制棋盘大小
+    if(!single.includes('down') && row + down<=14 && circles[row + down][col] == target){
+      down ++;
+    }else{
+      single.push('down');
+    }
+  }
+  return up + down >= 6;
 }
 
 /**
@@ -268,35 +263,25 @@ const checkVertical = (row: number, col: number) => {
  * @param col
  */
 const checkHorizontal = (row: number, col: number) => {
-    //定义一个变量定义向左的次数
-    let left = 0;
-    //定义一个变量定义向右的次数
-    let right = 0;
-    let times = 0;
-    //当前总共有几个连在一起
-    let count = 1;//初始值为1 本身算一个
-    let target = isBlack ? 'black' : 'white';
-    //为了避免死循环，给一个循环上限
-    while (times < 10000) {
-        times++;
-
-
-        //以row和col为起点在二维数组上向左和向右查找
-        //向左查找
-        left++;
-        if (circles[row - left][col] && circles[row - left][col] === target) {
-            count++;
-        }
-
-        //向右查找
-        right++;
-        if (circles[row + right][col] && circles[row + right][col] === target) {
-            count++
-        }
-        //如果棋子大于指定次数 或者棋子不是连续的
-        if (count >= 5 || (circles[row - left][col]) !== target && circles[row + right][col] !== target) break;
+  let target = circles[row][col];
+  // 水平方向的检测 只需要检查col +-
+  let left = 0;
+  let right = 0;
+  let single = [];
+  for (let i = 0; i < 5; i++) {
+    if(!single.includes('left') && row - left >= 0 && circles[row][col - left] == target){
+      left ++;
+    }else{
+      single.push('left');
     }
-    return count >= 5;
+    // 严重建议加一个全局变量 用于控制棋盘大小
+    if(!single.includes('right') && row + right<=14 && circles[row][col + right] == target){
+      right ++;
+    }else{
+      single.push('right');
+    }
+  }
+  return left + right >= 6;
 }
 
 /**
@@ -305,52 +290,50 @@ const checkHorizontal = (row: number, col: number) => {
  * @param col
  */
 const checkNW2SE = (row: number, col: number) => {
-    let times = 0;
-    let lt = 0;
-    let rb = 0;
-    let count = 1;
-    let target = isBlack ? 'black' : 'white';
-    while (times < 10000) {
-        times++;
-        lt++;
-        if (circles[row - lt][col - lt] && circles[row - lt][col - lt] === target) {
-            count++;
-        }
-        rb++
-        if (circles[row + rb][col + rb] && circles[row + rb][col + rb] === target) {
-            count++;
-        }
-
-        if (count >= 5 || (circles[row - lt][col - lt] !== target && circles[row + rb][col + rb] !== target)) break;
+  let target = circles[row][col];
+  let nw = 0; // 左上
+  let se = 0; // 右下
+  let single = [];
+  for (let i = 0; i < 5; i++) {
+    if(!single.includes('nw') && (row - nw >= 0 && col - nw >= 0) && circles[row - nw][col - nw] == target){
+      nw ++;
+    }else{
+      single.push('nw');
     }
-    return count >= 5;
+    // 严重建议加一个全局变量 用于控制棋盘大小
+    if(!single.includes('se') && (row + se <= 14 && col + se <= 14) && circles[row + se][col + se] == target){
+      se ++;
+    }else{
+      single.push('se');
+    }
+  }
+  return nw + se >= 6;
 }
 
 /**
- * 从右下到左上
+ * 从左下到右上
  * @param row
  * @param col
  */
 const checkNE2SW = (row: number, col: number) => {
-    let times = 0;
-    let rt = 0;
-    let lb = 0;
-    let count = 1;
-    let target = isBlack ? 'black' : 'white';
-    while (times < 10000) {
-        times++;
-        rt++;
-        if (circles[row + rt][col - rt] && circles[row + rt][col - rt] === target) {
-            count++;
-        }
-        lb++
-        if (circles[row - lb][col + lb] && circles[row - lb][col + lb] === target) {
-            count++;
-        }
-
-        if (count >= 5 || (circles[row + rt][col - rt] !== target && circles[row - lb][col + lb] !== target)) break;
+  let target = circles[row][col];
+  let ne = 0;//右上
+  let sw = 0;//左下
+  let single = [];
+  for (let i = 0; i < 5; i++) {
+    if(!single.includes('ne') && (row - ne >= 0 && col + ne <= 14) && circles[row - ne][col + ne] == target){
+      ne ++;
+    }else{
+      single.push('ne');
     }
-    return count >= 5;
+    // 严重建议加一个全局变量 用于控制棋盘大小
+    if(!single.includes('sw') && (row + sw <= 14 && col - sw >= 0) && circles[row + sw][col - sw] == target){
+      sw ++;
+    }else{
+      single.push('sw');
+    }
+  }
+  return ne + sw >= 6;
 }
 
 
@@ -360,60 +343,59 @@ const backMenu = () => emit("backMenu")
 const backPlayer = (player: Player) => emit('backPlayer', player);
 //获取游戏结果
 const getGameResult = () => {
-    store.setLocation(circles);
-    updateResult(GameRoomResultState.WIN);
-    emit('getGameResult', store.$state.result)
+  store.setLocation(circles);
+  updateResult(GameRoomResultState.WIN);
+  emit('getGameResult', store.$state.result)
 }
 //倒计时函数
 const countdown = (time: number) => {
-    let remainingTime = time;
+  let remainingTime = time;
 
-    // 更新剩余时间
-    function updateRemainingTime() {
-        remainingTime -= 1000; // 每秒减少1000毫秒
-        const minutes = Math.floor(remainingTime / 60000);
-        const seconds = Math.floor((remainingTime % 60000) / 1000);
+  // 更新剩余时间
+  function updateRemainingTime() {
+    remainingTime -= 1000; // 每秒减少1000毫秒
+    const minutes = Math.floor(remainingTime / 60000);
+    const seconds = Math.floor((remainingTime % 60000) / 1000);
 
-        // 在这里更新你的倒计时显示，例如在页面上显示剩余时间
-        minute.value = minutes;
-        second.value = seconds;
-        // 如果倒计时结束，清除计时器并执行结束操作
-        if (remainingTime <= 0) {
-            clearInterval(timer);
-            console.log('倒计时结束');
-            // 这里可以添加倒计时结束时的代码
-            updateResult(GameRoomResultState.LOSE);
-        }
+    // 在这里更新你的倒计时显示，例如在页面上显示剩余时间
+    minute.value = minutes;
+    second.value = seconds;
+    // 如果倒计时结束，清除计时器并执行结束操作
+    if (remainingTime <= 0) {
+      clearInterval(timer);
+      console.log('倒计时结束');
+      // 这里可以添加倒计时结束时的代码
+      updateResult(GameRoomResultState.LOSE);
     }
+  }
 
-    // 每秒更新一次剩余时间
-    timer = setInterval(updateRemainingTime, 1000);
+  // 每秒更新一次剩余时间
+  timer = setInterval(updateRemainingTime, 1000);
 
 }
 // 更新游戏结果
 const updateResult = (state: GameRoomResultState) => {
-    store.setGameState(GameRoomState.END);
-    console.log(store.$state.state)
-    store.setResult(props.player, state);
+  store.setGameState(GameRoomState.END);
+  console.log(store.$state.state)
+  store.setResult(props.player, state);
 }
 
 onMounted(() => {
-    init()
+  init()
 })
 </script>
 
 <style lang="scss" scoped>
 .game-layout {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 
 
-
-    .checker-board {
-        display: block;
-        margin: 0 auto;
-        margin-top: 56px;
-        position: relative;
-    }
+  .checker-board {
+    display: block;
+    margin: 0 auto;
+    margin-top: 56px;
+    position: relative;
+  }
 }
 </style>
